@@ -30,13 +30,18 @@ def main():
     try:
         for line in sys.stdin:
             parts = line.split()
-            if len(parts) < 7:
+            if len(parts) < 2:
                 continue
 
             try:
                 file_size = int(parts[-1])
                 status_code = int(parts[-2])
             except ValueError:
+                continue
+
+            # في حالة كان التنسيق خطأ أو لا يحتوي على الأقواس بالشكل الصحيح للـ date
+            # يمكننا التحقق البسيط من طول الـ parts أو هيكل الـ date
+            if not (parts[1].startswith('[') and parts[1].endswith(']')):
                 continue
 
             if status_code in status_counts:
