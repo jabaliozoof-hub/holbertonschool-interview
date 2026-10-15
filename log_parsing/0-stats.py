@@ -29,19 +29,21 @@ def main():
 
     try:
         for line in sys.stdin:
-            line_count += 1
             parts = line.split()
+            if len(parts) < 2:
+                continue
 
-            if len(parts) >= 2:
-                try:
-                    file_size = int(parts[-1])
-                    status_code = int(parts[-2])
+            try:
+                file_size = int(parts[-1])
+                status_code = int(parts[-2])
+            except ValueError:
+                continue
 
-                    total_file_size += file_size
-                    if status_code in status_counts:
-                        status_counts[status_code] += 1
-                except (ValueError, IndexError):
-                    pass
+            if status_code in status_counts:
+                status_counts[status_code] += 1
+            
+            total_file_size += file_size
+            line_count += 1
 
             if line_count % 10 == 0:
                 print_statistics(total_file_size, status_counts)
