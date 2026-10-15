@@ -1,11 +1,12 @@
 #!/usr/bin/python3
-"""Log parsing script that reads stdin and computes metrics."""
-
+"""
+Script that reads stdin line by line and computes metrics.
+"""
 import sys
 
 
 def print_statistics(total_file_size, status_counts):
-    """Print the accumulated statistics."""
+    """Prints the accumulated file size and status code counts."""
     print("File size: {}".format(total_file_size))
     for code in sorted(status_counts.keys()):
         if status_counts[code] > 0:
@@ -13,7 +14,7 @@ def print_statistics(total_file_size, status_counts):
 
 
 def main():
-    """Main function to read stdin and process log lines."""
+    """Main function to parse log data from stdin."""
     total_file_size = 0
     status_counts = {
         200: 0,
@@ -23,7 +24,7 @@ def main():
         403: 0,
         404: 0,
         405: 0,
-        500: 0
+        500: 0,
     }
     line_count = 0
 
@@ -39,18 +40,14 @@ def main():
             except ValueError:
                 continue
 
-            # في حالة كان التنسيق خطأ أو لا يحتوي على الأقواس بالشكل الصحيح للـ date
-            # يمكننا التحقق البسيط من طول الـ parts أو هيكل الـ date
-            if not (parts[1].startswith('[') and parts[1].endswith(']')):
-                continue
-
+            total_file_size += file_size
             if status_code in status_counts:
                 status_counts[status_code] += 1
-                total_file_size += file_size
-                line_count += 1
 
-                if line_count % 10 == 0:
-                    print_statistics(total_file_size, status_counts)
+            line_count += 1
+
+            if line_count % 10 == 0:
+                print_statistics(total_file_size, status_counts)
 
     except KeyboardInterrupt:
         print_statistics(total_file_size, status_counts)
