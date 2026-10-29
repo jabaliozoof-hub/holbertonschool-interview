@@ -63,7 +63,7 @@ def main():
     # Get validated N value from command line arguments
     n = validate_arguments()
     results = []
-    
+
     # Run the N queens solver
     solve_nqueens(n, 0, [], results)
 
